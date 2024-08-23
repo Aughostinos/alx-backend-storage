@@ -9,10 +9,10 @@ CREATE PROCEDURE AddBonus(
     IN score INT
 )
 BEGIN
-    INSERT INTO projects (name) 
-    VALUES (project_name) 
+    INSERT INTO projects (name)
+    VALUES (project_name)
     ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);
-    
+
     INSERT INTO corrections (user_id, project_id, score)
     VALUES (user_id, LAST_INSERT_ID(), score);
 

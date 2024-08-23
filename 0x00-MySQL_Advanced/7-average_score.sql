@@ -4,18 +4,18 @@
 DELIMITER $$
 
 CREATE PROCEDURE ComputeAverageScoreForUser(
-    IN user_id INT
+    IN p_user_id INT
 )
 BEGIN
     DECLARE avg_score FLOAT;
     -- calculate average
     SELECT AVG(score) INTO avg_score
     FROM corrections
-    WHERE user_id = user_id;
+    WHERE user_id = p_user_id;
     -- update user's average
     UPDATE users
     SET average_score = IFNULL(avg_score, 0)
-    WHERE id = user_id;
+    WHERE id = p_user_id;
 
 END$$
 
