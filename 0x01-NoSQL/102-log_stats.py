@@ -31,12 +31,12 @@ def log_stats():
     # top 10 Ips
     print("IPs:")
     ips = [
-        { "$group": {"_id": "$ip", "count": {"sum": 1 }}},
+        { "$group": {"_id": "$ip", "count": {"$sum": 1 }}},
         { "$sort": {"count": -1}},
         {"$limit": 10}
     ]
     top_10_ips = nginx_collection.aggregate(ips)
-    for ip in ips:
+    for ip in top_10_ips:
         print(f"\t{ip['_id']}: {ip['count']}")
 
 
