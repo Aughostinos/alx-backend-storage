@@ -2,6 +2,7 @@
 """
 task 15. Log stats - new version
 """
+from pymongo import MongoClient
 
 
 def log_stats():
