@@ -28,3 +28,7 @@ def log_stats():
         {"method": "GET", "path": "/status"}
         )
     print(f"{status_check} status check")
+
+
+if __name__ == "__main__":
+    log_stats()
