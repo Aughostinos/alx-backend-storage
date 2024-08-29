@@ -65,7 +65,6 @@ def replay(method: Callable) -> None:
         print(f"{qualname}(*{input_.decode('utf-8')}) -> {output.decode('utf-8')}")
 
 
-
 class Cache:
     """cache class to store data in redis"""
 
