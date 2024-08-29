@@ -3,10 +3,25 @@
 Tasks
 0. Writing strings to Redis
 1. Reading from Redis and recovering original type
+2. Incrementing values
 """
 import redis
 import uuid
 from typing import Union, Callable, Optional
+import functools
+
+
+def count_calls(method: Callable) -> Callable:
+    """count_calls decorator that takes a single
+    method Callable argument and returns a Callable"""
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """Wrapper function that increments the call count in Redis"""
+        key = method.__qualname__
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+
+    return wrapper
 
 
 class Cache:
@@ -46,3 +61,6 @@ class Cache:
     def get_str(self, key: str) -> Optional[str]:
         """Retrieve data from Redis as a string"""
         return self.get(key, fn=lambda d: d.decode("utf-8"))
+    
+    
+    
