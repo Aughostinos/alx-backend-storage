@@ -68,13 +68,11 @@ def replay(method: Callable) -> None:
 class Cache:
     """cache class to store data in redis"""
 
-
     def __init__(self):
         """store an instance of the Redis client
         as a private variable named _redis"""
         self._redis = redis.Redis()
         self._redis.flushdb()
-
 
     @count_calls
     @call_history
@@ -83,7 +81,6 @@ class Cache:
         key = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
-
 
     def get(self, key: str, fn: Optional[Callable] =
             None) -> Union[str, bytes, int, float, None]:
@@ -95,11 +92,9 @@ class Cache:
             return fn(data)
         return data
 
-
     def get_int(self, key: str) -> Optional[int]:
         """Retrieve data from Redis as an integer"""
         return self.get(key, fn=int)
-
 
     def get_str(self, key: str) -> Optional[str]:
         """Retrieve data from Redis as a string"""
