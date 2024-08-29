@@ -5,6 +5,7 @@ Tasks
 1. Reading from Redis and recovering original type
 2. Incrementing values
 3. Storing lists
+4. Retrieving lists
 """
 import redis
 import uuid
@@ -43,6 +44,25 @@ def call_history(method: Callable) -> Callable:
         return output
 
     return wrapper
+
+
+def replay(method: Callable) -> None:
+    """ Display the history of calls"""
+    # the qualified name of the method
+    qualname = method.__qualname__
+
+    # the number of calls
+    inputs_key = f"{qualname}:inputs"
+    outputs_key = f"{qualname}:outputs"
+
+    # Retrieve inputs and outputs
+    inputs = method.__self__._redis.lrange(inputs_key, 0, -1)
+    outputs = method.__self__._redis.lrange(outputs_key, 0, -1)
+
+    # Display the information
+    print(f"{qualname} was called {len(inputs)} times:")
+    for input_, output in zip(inputs, outputs):
+        print(f"{qualname}(*{input_.decode('utf-8')}) -> {output.decode('utf-8')}")
 
 
 
