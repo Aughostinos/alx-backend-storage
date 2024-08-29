@@ -26,7 +26,6 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
-
 def call_history(method: Callable) -> Callable:
     """call_history decorator that stores the history"""
     @functools.wraps(method)
@@ -34,11 +33,11 @@ def call_history(method: Callable) -> Callable:
         """Wrapper function that stores input and output history in Redis."""
         input_key = f"{method.__qualname__}:inputs"
         output_key = f"{method.__qualname__}:outputs"
-        #store input
+        # store input
         self._redis.rpush(input_key, str(args))
-        #execute original emthod
+        # execute original emthod
         output = method(self, *args, **kwargs)
-        #store output
+        # store output
         self._redis.rpush(output_key, str(output))
 
         return output
