@@ -62,7 +62,8 @@ def replay(method: Callable) -> None:
     # Display the information
     print(f"{qualname} was called {len(inputs)} times:")
     for input_, output in zip(inputs, outputs):
-        print(f"{qualname}(*{input_.decode('utf-8')}) -> {output.decode('utf-8')}")
+        print(f"{qualname}(
+            *{input_.decode('utf-8')}) -> {output.decode('utf-8')}")
 
 
 class Cache:
@@ -93,7 +94,7 @@ class Cache:
         data = self._redis.get(key)
         if data is not None and fn is not None:
             return fn(data)
-        return data    
+        return data
 
 
     def get_int(self, key: str) -> Optional[int]:
@@ -104,6 +105,3 @@ class Cache:
     def get_str(self, key: str) -> Optional[str]:
         """Retrieve data from Redis as a string"""
         return self.get(key, fn=lambda d: d.decode("utf-8"))
-    
-    
-    
