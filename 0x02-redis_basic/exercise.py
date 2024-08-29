@@ -4,6 +4,7 @@ Tasks
 0. Writing strings to Redis
 1. Reading from Redis and recovering original type
 2. Incrementing values
+3. Storing lists
 """
 import redis
 import uuid
@@ -24,6 +25,27 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
+
+def call_history(method: Callable) -> Callable:
+    """call_history decorator that stores the history"""
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """Wrapper function that stores input and output history in Redis."""
+        input_key = f"{method.__qualname__}:inputs"
+        output_key = f"{method.__qualname__}:outputs"
+        #store input
+        self._redis.rpush(input_key, str(args))
+        #execute original emthod
+        output = method(self, *args, **kwargs)
+        #store output
+        self._redis.rpush(output_key, str(output))
+
+        return output
+
+    return wrapper
+
+
+
 class Cache:
     """cache class to store data in redis"""
 
@@ -36,6 +58,7 @@ class Cache:
 
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """The method should generate a random key """
         key = str(uuid.uuid4())
